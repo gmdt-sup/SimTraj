@@ -9,9 +9,6 @@ from lancement import *
 from etat_vol import *
 from aerodynamique import *
 
-# TODO : Prendre en compte l'altitude de décollage
-rho = rho_0
-g = g_0
 
 etat = EtatVol.RAMPE
 
@@ -32,14 +29,14 @@ def fx(t, x, y, Vx, Vy):
         else:
             theta = phi"""
 
-    Ftrainee = 1/2 * rho * C_trainee * S * (Vx ** 2 + Vy ** 2)
-    Fportance = 1/2 * rho * C_portance * S * (Vx ** 2 + Vy ** 2)
+    Ftrainee = 1/2 * rho(y) * C_trainee * S * (Vx ** 2 + Vy ** 2)
+    Fportance = 1/2 * rho(y) * C_portance * S * (Vx ** 2 + Vy ** 2)
 
     f_x = - Ftrainee * cos(phi) - Fportance * sin(phi) + Fmot(t) * cos(phi)
 
     if etat == EtatVol.SAUVEGARDE:
-        Ftrainee_para = 1 / 2 * rho * C_trainee_para * S * (Vx ** 2 + Vy ** 2)
-        Fportance_para = 1 / 2 * rho * C_portance_para * S * (Vx ** 2 + Vy ** 2)
+        Ftrainee_para = 1 / 2 * rho(y) * C_trainee_para * S * (Vx ** 2 + Vy ** 2)
+        Fportance_para = 1 / 2 * rho(y) * C_portance_para * S * (Vx ** 2 + Vy ** 2)
 
         f_x += - Ftrainee_para * cos(phi) - Fportance_para * sin(phi)
 
@@ -57,30 +54,30 @@ def fy(t, x, y, Vx, Vy):
     else:
         theta = phi"""
 
-    Ftrainee = 1 / 2 * rho * C_trainee * S * (Vx ** 2 + Vy ** 2)
-    Fportance = 1 / 2 * rho * C_portance * S * (Vx ** 2 + Vy ** 2)
+    Ftrainee = 1 / 2 * rho(y) * C_trainee * S * (Vx ** 2 + Vy ** 2)
+    Fportance = 1 / 2 * rho(y) * C_portance * S * (Vx ** 2 + Vy ** 2)
 
-    f_y = - Ftrainee * sin(phi) + Fportance * cos(phi) + Fmot(t) * sin(phi)
+    f_y = - Ftrainee * sin(phi) + Fportance * cos(phi) + Fmot(t) * sin(phi) - m(t) * g
 
     if etat == EtatVol.SAUVEGARDE:
-        Ftrainee_para = 1 / 2 * rho * C_trainee_para * S * (Vx ** 2 + Vy ** 2)
-        Fportance_para = 1 / 2 * rho * C_portance_para * S * (Vx ** 2 + Vy ** 2)
+        Ftrainee_para = 1 / 2 * rho(y) * C_trainee_para * S * (Vx ** 2 + Vy ** 2)
+        Fportance_para = 1 / 2 * rho(y) * C_portance_para * S * (Vx ** 2 + Vy ** 2)
 
         f_y += - Ftrainee_para * sin(phi) + Fportance_para * cos(phi)
 
-    return f_y / m(t) - g
+    return f_y / m(t)
 
 
 """Integration par Runge-Kutta d'ordre 4"""
 
 # Conditions Initiales
 
-C_I = [1, 0, 0, 0, 0, 0, angle_rampe, m_seche + m_carbu]  # [ X0 Vx0 Ax0 Y0 Vy0 Ay0 Phi0 m0]
+C_I = [0, 0, 0, y_0, 0, 0, angle_rampe, m_seche + m_carbu]  # [ X0 Vx0 Ax0 Y0 Vy0 Ay0 Phi0 m0]
 Sol = np.array([C_I])
 # Initialisation de la simulation
 
 h = 0.01  # pas de temps (en s)
-t_simulation = 60  # durée de la simulation
+t_simulation = 80  # durée de la simulation
 step = int(t_simulation // h)
 t = np.linspace(0, t_simulation, step)
 
