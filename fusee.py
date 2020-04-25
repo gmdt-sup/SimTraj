@@ -15,9 +15,14 @@ m_carbu = 7
 t_moteur = 5  # temps d'allumage moteur (en s)
 F_moteur = 3500  # poussee moteur (en N)
 
+"Données parachute"
+# TODO: Trouver les bonnes valeurs et prendre en compte les variations ?
+C_trainee_para = 0.6
+C_portance_para = 1
+
 
 def Fmot(t):
-    if (t >= t_moteur):
+    if t >= t_moteur:
         return 0
     else:
         return F_moteur
