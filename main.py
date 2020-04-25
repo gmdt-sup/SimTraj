@@ -15,24 +15,19 @@ etat = EtatVol.RAMPE
 
 # Fonctions de mecanique
 # TODO : Prendre en compte le moment des forces aéro
-# TODO : Garder phi constant tant qu'on est sur la rampe
-# TODO : La pousée est selon l'axe de la fusée, pas selon la vitesse
 
 def fx(t, x, y, Vx, Vy):
-    if Vx != 0 or Vy != 0:
-        phi = asin(Vy / sqrt(Vx ** 2 + Vy ** 2))
-    else:
+    if etat == EtatVol.RAMPE:
         phi = angle_rampe
-
-    """if x != 0 or y != 0:
-            theta = asin(y / sqrt(x ** 2 + y ** 2))
-        else:
-            theta = phi"""
+        theta = angle_rampe
+    else:
+        phi = asin(Vy / sqrt(Vx ** 2 + Vy ** 2))
+        theta = asin(y / sqrt(x ** 2 + y ** 2))
 
     Ftrainee = 1/2 * rho(y) * C_trainee * S * (Vx ** 2 + Vy ** 2)
     Fportance = 1/2 * rho(y) * C_portance * S * (Vx ** 2 + Vy ** 2)
 
-    f_x = - Ftrainee * cos(phi) - Fportance * sin(phi) + Fmot(t) * cos(phi)
+    f_x = - Ftrainee * cos(phi) - Fportance * sin(phi) + Fmot(t) * cos(theta)
 
     if etat == EtatVol.SAUVEGARDE:
         Ftrainee_para = 1 / 2 * rho(y) * C_trainee_para * S * (Vx ** 2 + Vy ** 2)
@@ -44,20 +39,17 @@ def fx(t, x, y, Vx, Vy):
 
 
 def fy(t, x, y, Vx, Vy):
-    if Vx != 0 or Vy != 0:
-        phi = asin(Vy / sqrt(Vx ** 2 + Vy ** 2))
-    else:
+    if etat == EtatVol.RAMPE:
         phi = angle_rampe
-
-    """if x != 0 or y != 0:
-        theta = asin(y / sqrt(x ** 2 + y ** 2))
+        theta = angle_rampe
     else:
-        theta = phi"""
+        phi = asin(Vy / sqrt(Vx ** 2 + Vy ** 2))
+        theta = asin(y / sqrt(x ** 2 + y ** 2))
 
     Ftrainee = 1 / 2 * rho(y) * C_trainee * S * (Vx ** 2 + Vy ** 2)
     Fportance = 1 / 2 * rho(y) * C_portance * S * (Vx ** 2 + Vy ** 2)
 
-    f_y = - Ftrainee * sin(phi) + Fportance * cos(phi) + Fmot(t) * sin(phi) - m(t) * g
+    f_y = - Ftrainee * sin(phi) + Fportance * cos(phi) + Fmot(t) * sin(theta) - m(t) * g
 
     if etat == EtatVol.SAUVEGARDE:
         Ftrainee_para = 1 / 2 * rho(y) * C_trainee_para * S * (Vx ** 2 + Vy ** 2)
@@ -77,7 +69,7 @@ Sol = np.array([C_I])
 # Initialisation de la simulation
 
 h = 0.01  # pas de temps (en s)
-t_simulation = 80  # durée de la simulation
+t_simulation = 60  # durée de la simulation
 step = int(t_simulation // h)
 t = np.linspace(0, t_simulation, step)
 
