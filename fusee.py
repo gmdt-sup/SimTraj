@@ -9,6 +9,9 @@ C_trainee = 0.38  # TODO : Prendre en compte les variations avec le mach, la pre
 C_portance = 0.02  # TODO : J'ai mis ca totalement au pif + prendre en compte les variations ...
 S = pi * (D_f / 2) ** 2  # rocket cross-sectional area (en m^2)
 L = 2.5  # longueur fusee (en m)
+# TODO : Mettre la bonne valeur
+Iz0 = 1 / 2 * m_seche * (D_f / 2)**2  # Inertie de la fusée (U.S.I.)
+d0 = 0.3  # Marge statique (m) (distance centre gravité - centre pression aéro)
 
 "Données moteur"
 m_carbu = 7
@@ -33,3 +36,14 @@ def m(t):
         return m_seche
     else:
         return m_seche + m_carbu * (1 - t / t_moteur)
+
+
+# TODO : Dépendance en t
+def Iz(t):
+    return Iz0
+
+
+# TODO : Dépendance en t
+def marge_stat(t):
+    return d0
+
