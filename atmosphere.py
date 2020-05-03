@@ -13,7 +13,7 @@ gamma = 1.4
 
 
 def T(y):
-    if y < 11019000:  # FIXME : ça fait 11 000 km!!!
+    if y < 11019:
         return T_0 + y * 10 ** (-3) * -6.5
     else:
         return -56.5

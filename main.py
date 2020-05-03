@@ -13,7 +13,6 @@ etat = EtatVol.RAMPE
 
 
 ## Fonctions de mecanique
-# TODO : Prendre en compte le moment des forces aéro
 # TODO : Terme dû à l'inertie et la masse pas constante
 
 
@@ -106,13 +105,13 @@ while i < np.size(t) - 1:
              theta + h * thetap + h ** 2 / 2 * km2, thetap + h * km3)
 
     # Nouvelles données
-    xn = x + h * Vx + h ** 2 / 6 * (kx1 + kx2 + kx3) #FIXME noms a definir explicitement ou doc a cote
+    xn = x + h * Vx + h ** 2 / 6 * (kx1 + kx2 + kx3) # FIXME noms a definir explicitement ou doc a cote
     Vxn = Vx + h / 6 * (kx1 + 2 * kx2 + 2 * kx3 + kx4)
     axn = fx(t[i], x, y, Vx, Vy, theta, thetap)
 
     yn = y + h * Vy + h ** 2 / 6 * (ky1 + ky2 + ky3)
     Vyn = Vy + h / 6 * (ky1 + 2 * ky2 + 2 * ky3 + ky4)
-    ayn = fx(t[i], x, y, Vx, Vy, theta, thetap)
+    ayn = fy(t[i], x, y, Vx, Vy, theta, thetap)
 
     thetan = theta + h * thetap + h ** 2 / 6 * (km1 + km2 + km3)
     thetapn = thetap + h / 6 * (km1 + 2 * km2 + 2 * km3 + km4)
