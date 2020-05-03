@@ -1,4 +1,4 @@
-from math import cos, sin
+from math import cos, sin, asin
 
 import matplotlib.pyplot as plt
 import numpy as np
